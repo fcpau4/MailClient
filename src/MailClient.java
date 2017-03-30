@@ -24,14 +24,13 @@ public class MailClient {
 
     public MailClient(){
         init();
-        generateMessage("Marina. Tema Bragas", "Hola Marcos, soy Marina.\n\n Ayer me dejé mi ropa interior en tu cajonera. Espero que no lo viera tu novia. \n\nUn beso guapi.", "");
     }
 
 
     /**
      * Inicialitzo el gestor de correu electrònic.
      */
-    private void init(){
+    public void init(){
 
         //Estableixo el repositori propietats del client.
         mailServerProperties = System.getProperties();
@@ -61,7 +60,7 @@ public class MailClient {
      * @param body
      * @param file
      */
-    private void generateMessage(String subject, String body, String file){
+    public void generateMessage(String subject, String body, String file){
 
         mailMessage = new MimeMessage(mailSession);
 
