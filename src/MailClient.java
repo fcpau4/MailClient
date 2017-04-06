@@ -19,10 +19,11 @@ public class MailClient {
     private Properties mailServerProperties;
     private Session mailSession;
     private MimeMessage mailMessage;
+    private PasswordAuthentication PA;
 
-    private String sender = "";
-    private String passwd = "";
-    private String mailReceptor ="";
+    private static String sender = "marinagar46@hotmail.com";
+    private static String passwdSender = "ronaldinha10";
+    private String mailReceptor ="fcpau4@gmail.com";
 
     public MailClient(){
         init();
@@ -41,6 +42,7 @@ public class MailClient {
         mailServerProperties.put("mail.smtp.port", "587");
 
         //The SMTP of Hotmail is 587 using TLS/SSL.
+
         mailServerProperties.setProperty("mail.host", "smtp.live.com");
 
         //Afegeixo l'opció d'autenticació.
@@ -53,8 +55,12 @@ public class MailClient {
 
         mailServerProperties.setProperty("mail.pop3s.port",  "995");
         //Per últim inicialitzo la sessió que la necessitaré per generar el missatge.
-        mailSession = Session.getDefaultInstance(mailServerProperties, null);
+
+        mailSession = Session.getDefaultInstance(mailServerProperties);
     }
+
+
+
 
 
     /**
@@ -69,6 +75,7 @@ public class MailClient {
 
         try {
             mailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(mailReceptor));
+            mailMessage.setFrom(new InternetAddress(sender));
 
             //Estableixo el head del correu.
             mailMessage.setSubject(subject);
@@ -98,18 +105,21 @@ public class MailClient {
                 multipart.addBodyPart(messageBodyPart);
 
                 //Per últim afegeixo tant el missatge com el fitxer del Multipart al Contingut del Message.
+
                 mailMessage.setContent(multipart);
+
             }else{
+
                 mailMessage.setContent(body, "text/html");
             }
 
             System.out.println("Mail Session has been created successfully..");
 
+
             Transport transport = mailSession.getTransport("smtp");
-            transport.connect("smtp.live.com", sender, passwd);
+            transport.connect("smtp.live.com", sender, passwdSender);
             transport.sendMessage(mailMessage, mailMessage.getAllRecipients() );
             transport.close();
-
 
         } catch (MessagingException e) {
             e.printStackTrace();
