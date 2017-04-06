@@ -20,7 +20,9 @@ public class MailClient {
     private Session mailSession;
     private MimeMessage mailMessage;
 
-    private String mailReceptor ="fcpau4@gmail.com";
+    private String sender = "";
+    private String passwd = "";
+    private String mailReceptor ="";
 
     public MailClient(){
         init();
@@ -49,6 +51,7 @@ public class MailClient {
 
         System.out.println("Mail Server Properties have been setup successfully..");
 
+        mailServerProperties.setProperty("mail.pop3s.port",  "995");
         //Per últim inicialitzo la sessió que la necessitaré per generar el missatge.
         mailSession = Session.getDefaultInstance(mailServerProperties, null);
     }
@@ -60,7 +63,7 @@ public class MailClient {
      * @param body
      * @param file
      */
-    public void generateMessage(String subject, String body, String file){
+    public void setMessage(String subject, String body, String file){
 
         mailMessage = new MimeMessage(mailSession);
 
@@ -91,19 +94,19 @@ public class MailClient {
 
                 DataSource source = new FileDataSource(file);
                 messageBodyPart.setDataHandler(new DataHandler(source));
-                messageBodyPart.setFileName( source.getName() );
+                messageBodyPart.setFileName(source.getName());
                 multipart.addBodyPart(messageBodyPart);
 
                 //Per últim afegeixo tant el missatge com el fitxer del Multipart al Contingut del Message.
                 mailMessage.setContent(multipart);
             }else{
-                mailMessage.setContent( body, "text/html");
+                mailMessage.setContent(body, "text/html");
             }
 
             System.out.println("Mail Session has been created successfully..");
 
             Transport transport = mailSession.getTransport("smtp");
-            transport.connect("smtp.live.com", "marinagar46@hotmail.com", "ronaldinha10");
+            transport.connect("smtp.live.com", sender, passwd);
             transport.sendMessage(mailMessage, mailMessage.getAllRecipients() );
             transport.close();
 
